@@ -1,7 +1,6 @@
 GOPATH?=$(shell go env GOPATH)
-GITHUB_TOKEN=$(GOPHERDOME_TOKEN) # This will clobber your api rate limit, don't use your personal token
 
-SCENARIO=docker run --rm -it -e GITHUB_TOKEN -v `pwd`/scenarios:/scenarios gopherdome
+SCENARIO=docker run --rm -it -e GOPHERDOME_TOKEN -v `pwd`/scenarios:/scenarios gopherdome
 all: testimage new
 
 new:

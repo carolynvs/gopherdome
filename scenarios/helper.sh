@@ -2,17 +2,23 @@
 
 set -xeuo pipefail
 
-if [[ ! -z "${GITHUB_TOKEN:=}" && ! -f $HOME/.netrc ]]; then
-  echo "Initializing $HOME/.netrc with GITHUB_TOKEN"
-  echo "machine api.github.com login GOPHERDOME password $GITHUB_TOKEN" > $HOME/.netrc
-fi
+configure-github-token() {
+  set +x # Do not accidentally print the token
+  if [[ -v GOPHERDOME_TOKEN && ! -f $HOME/.netrc ]]; then
+    echo "Initializing $HOME/.netrc with GOPHERDOME_TOKEN"
+    echo "machine api.github.com login GOPHERDOME password $GOPHERDOME_TOKEN" > $HOME/.netrc
+  fi
+  set -x
+}
 
 setup() {
-  if [[ -z "$PROJECT" ]]; then
+  configure-github-token
+
+  if [[ -v "$PROJECT" ]]; then
     echo "PROJECT is not defined"
   fi
 
-  if [[ -z "$BRANCH" ]]; then
+  if [[ -v "$BRANCH" ]]; then
     echo "BRANCH is not defined"
   fi
 
