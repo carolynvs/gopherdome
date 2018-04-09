@@ -4,8 +4,7 @@ SCENARIO=docker run --rm -it -e GOPHERDOME_TOKEN -v `pwd`/scenarios:/scenarios g
 all: testimage new
 
 new:
-	$(SCENARIO) /scenarios/new/noimport/scenario.sh dep
-	$(SCENARIO) /scenarios/new/noimport/scenario.sh vgo
+	$(SCENARIO) /scenarios/new/noimport/scenario.sh
 
 .PHONY: testimage
 testimage:

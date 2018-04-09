@@ -2,6 +2,19 @@
 
 set -xeuo pipefail
 
+if [[ -v "$PROJECT" ]]; then
+  echo "PROJECT is not defined"
+fi
+
+if [[ -v "$BRANCH" ]]; then
+  echo "BRANCH is not defined"
+fi
+
+OUTPUT_DIR="$( cd "$( dirname "$SCENARIO" )" && pwd )/output"
+GOPATH=`go env GOPATH`
+REPO=https://$PROJECT.git
+export TEST_DIR=$GOPATH/src/$PROJECT
+
 configure-github-token() {
   set +x # Do not accidentally print the token
   if [[ -v GOPHERDOME_TOKEN && ! -f $HOME/.netrc ]]; then
@@ -14,18 +27,14 @@ configure-github-token() {
 setup() {
   configure-github-token
 
-  if [[ -v "$PROJECT" ]]; then
-    echo "PROJECT is not defined"
-  fi
+  mkdir -p `dirname $TEST_DIR`
+  git clone --branch $BRANCH $REPO $TEST_DIR
+  cd $TEST_DIR
 
-  if [[ -v "$BRANCH" ]]; then
-    echo "BRANCH is not defined"
-  fi
+  mkdir $OUTPUT_DIR
+}
 
-  GOPATH=$(go env GOPATH)
-  REPO=https://$PROJECT.git
-  TESTPATH=$GOPATH/src/$PROJECT
-  mkdir -p $(dirname $TESTPATH)
-  git clone --branch $BRANCH $REPO $TESTPATH
-  cd $TESTPATH
+reset() {
+  cd $TEST_DIR
+  git clean -xdf
 }
