@@ -10,7 +10,8 @@ if [[ -v "$BRANCH" ]]; then
   echo "BRANCH is not defined"
 fi
 
-OUTPUT_DIR="$( cd "$( dirname "$SCENARIO" )" && pwd )/output"
+SCENARIO=${SCENARIO_PATH/.sh/}
+OUTPUT_DIR=${SCENARIO/scenarios/output}
 GOPATH=`go env GOPATH`
 REPO=https://$PROJECT.git
 export TEST_DIR=$GOPATH/src/$PROJECT
@@ -31,7 +32,7 @@ setup() {
   git clone --branch $BRANCH $REPO $TEST_DIR
   cd $TEST_DIR
 
-  mkdir $OUTPUT_DIR
+  mkdir -p $OUTPUT_DIR
 }
 
 reset() {

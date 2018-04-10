@@ -1,12 +1,18 @@
 GOPATH?=$(shell go env GOPATH)
 
-SCENARIO=docker run --rm -it -e GOPHERDOME_TOKEN -v `pwd`/scenarios:/scenarios gopherdome
-all: testimage new
+GOPHERDOME=docker run --rm -it -e GOPHERDOME_TOKEN -v `pwd`:/gopherdome -w /gopherdome gopherdome
+all: clean testimage new
 
+clean:
+	-@rm -r output
+ 
 new:
-	$(SCENARIO) /scenarios/new/noimport/scenario.sh
+	$(GOPHERDOME) scenarios/new/noimport.sh
 
 .PHONY: testimage
 testimage:
 	docker build -t gopherdome testimage
 	docker run --rm -it gopherdome
+
+testimage-debug: testimage
+	$(GOPHERDOME) bash

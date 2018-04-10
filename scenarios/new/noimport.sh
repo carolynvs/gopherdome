@@ -2,11 +2,11 @@
 
 set -xeuo pipefail
 
-SCENARIO=${BASH_SOURCE[0]}
+SCENARIO_PATH="$( cd $(dirname ${BASH_SOURCE[0]}) && pwd )/$(basename ${BASH_SOURCE[0]})"
 PROJECT=github.com/carolynvs/gopherdome-user
 BRANCH=master
 
-source /scenarios/helper.sh
+source /gopherdome/scenarios/helper.sh
 
 run-dep() {
   dep init -v
